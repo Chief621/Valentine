@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sylvia, Will You Be My Valentine? 💘</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      overflow: hidden;
+    }
+
+    /* Floating hearts background */
+    .floating-heart {
+      position: fixed;
+      bottom: -40px;
+      font-size: 24px;
+      animation: floatUp linear infinite;
+      opacity: 0.8;
+      pointer-events: none;
+    }
+
+    @keyframes floatUp {
+      from {
+        transform: translateY(0) scale(1);
+        opacity: 0.8;
+      }
+      to {
+        transform: translateY(-110vh) scale(1.5);
+        opacity: 0;
+      }
+    }
+
+    .card {
+      background: white;
+      width: 90%;
+      max-width: 360px;
+      border-radius: 24px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      padding: 24px;
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .message {
+      color: #ff4d6d;
+      font-size: 22px;
+      min-height: 80px;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 30px;
+    }
+
+    button {
+      padding: 14px 22px;
+      font-size: 18px;
+      border: none;
+      border-radius: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      touch-action: manipulation;
+    }
+
+    #yesBtn {
+      background: #ff4d6d;
+      color: white;
+      transform: scale(1);
+      transition: transform 0.3s ease;
+    }
+
+    #noBtn {
+      background: #ccc;
+      color: #333;
+      position: fixed;
+      z-index: 5;
+    }
+
+    /* Heart explosion */
+    .heart {
+      position: fixed;
+      font-size: 26px;
+      pointer-events: none;
+      animation: explode 1s ease-out forwards;
+      z-index: 10;
+    }
+
+    @keyframes explode {
+      0% {
+        transform: scale(0);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(1.6) translate(var(--x), var(--y));
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="card">
+    <div class="message" id="message">
+      Sylvia, will you be my Valentine? 💖
+    </div>
+
+    <div class="buttons">
+      <button id="yesBtn">YES 💕</button>
+      <button id="noBtn">NO 🙃</button>
+    </div>
+  </div>
+
+  <script>
+    const noBtn = document.getElementById("noBtn");
+    const yesBtn = document.getElementById("yesBtn");
+    const message = document.getElementById("message");
+
+    let yesScale = 1;
+    let messageIndex = 0;
+
+    const messages = [
+      "Sylvia, will you be my Valentine? 💖",
+      "Are you sure, Sylvia? 🥺",
+      "That NO button looks nervous 😳",
+      "You’re kind of amazing, you know 💕",
+      "This feels like destiny 💘",
+      "Okay but… I really hope you say yes 🤍"
+    ];
+
+    function moveNoButton() {
+      const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+      const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+
+      noBtn.style.left = `${x}px`;
+      noBtn.style.top = `${y}px`;
+
+      yesScale += 0.12;
+      yesBtn.style.transform = `scale(${yesScale})`;
+
+      messageIndex = (messageIndex + 1) % messages.length;
+      message.textContent = messages[messageIndex];
+    }
+
+    // Desktop + Mobile
+    noBtn.addEventListener("mouseover", moveNoButton);
+    noBtn.addEventListener("touchstart", (e) => {
+      e.preventDefault();
+      moveNoButton();
+    });
+
+    yesBtn.addEventListener("click", () => {
+      explodeHearts();
+
+      setTimeout(() => {
+        document.body.innerHTML = `
+          <div style="
+            height:100vh;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            background:linear-gradient(135deg,#ff4d6d,#ffb3c6);
+            font-family:'Comic Sans MS', cursive;
+            color:white;
+            text-align:center;
+            padding:20px;
+          ">
+            <h1>
+              Happy Valentine’s Day, Sylvia 💘<br><br>
+              I’m so lucky to have you 💖
+            </h1>
+          </div>
+        `;
+      }, 900);
+    });
+
+    function explodeHearts() {
+      for (let i = 0; i < 30; i++) {
+        const heart = document.createElement("div");
+        heart.className = "heart";
+        heart.textContent = "💖";
+
+        const rect = yesBtn.getBoundingClientRect();
+        heart.style.left = rect.left + rect.width / 2 + "px";
+        heart.style.top = rect.top + rect.height / 2 + "px";
+
+        heart.style.setProperty("--x", (Math.random() - 0.5) * 300 + "px");
+        heart.style.setProperty("--y", (Math.random() - 0.5) * 300 + "px");
+
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 1000);
+      }
+    }
+
+    // Background floating hearts
+    setInterval(() => {
+      const heart = document.createElement("div");
+      heart.className = "floating-heart";
+      heart.textContent = "💗";
+      heart.style.left = Math.random() * 100 + "vw";
+      heart.style.animationDuration = 4 + Math.random() * 4 + "s";
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 8000);
+    }, 500);
+  </script>
+
+</body>
+</html>
